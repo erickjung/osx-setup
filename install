@@ -133,7 +133,7 @@ for app in $(<$cwd/data/cli); do
     fi
 done
 
-run 'pip install mallet-lldb'
+run 'sudo pip install mallet-lldb'
 
 step "Installing Desktop apps...\n"
 
