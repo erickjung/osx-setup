@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+# thanks to https://github.com/mzdr/macOS
+
+
+# Script's color palette
+reset="\033[0m"
+highlight="\033[41m\033[97m"
+dot="\033[33m▸ $reset"
+dim="\033[2m"
+bold="\033[1m"
+
+# Get full directory name of this script
+cwd="$(cd "$(dirname "$0")" && pwd)"
+
+# Keep-alive: update existing `sudo` time stamp until script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+headline() {
+    printf "${highlight} %s ${reset}\n" "$@"
+}
+
+chapter() {
+    echo -e "${highlight} $@ ${reset}\n"
+}
+
+# Prints out a step, if last parameter is true then without an ending newline
+step() {
+    if [ $# -eq 1 ]
+    then echo -e "${dot}$@"
+    else echo -ne "${dot}$@"
+    fi
+}
+
+run() {
+    echo -e "${dim}▹ $@ $reset"
+    eval $@
+    echo ""
+}
+
+echo ""
+headline "                                           "
+headline "   We are about to configure your  Mac!   "
+headline "                                           "
+echo ""
+
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
+
+# Ask for the administrator password upfront
+if [ $(sudo -n uptime 2>&1|grep "load"|wc -l) -eq 0 ]
+then
+    step "Some of these settings are system-wide, therefore we need your permission."
+    sudo -v
+    echo ""
+fi
+
+chapter "Configuring OSX settings"
+
+# step "Disabling OS X Gate Keeper..."
+# run sudo spctl --master-disable
+# run sudo defaults write /var/db/SystemPolicy-prefs.plist enabled -string no
+
+step "Disabling the “Are you sure you want to open this application?”..."
+run defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+step "Enabling full keyboard access for all controls..."
+run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+step "Setting a blazingly fast keyboard repeat rate..."
+run defaults write NSGlobalDomain KeyRepeat -int 1
+run defaults write NSGlobalDomain InitialKeyRepeat -int 10
+
+step "Disabling auto-correct..."
+run defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+step "Setting home as the default location for new Finder windows..."
+run defaults write com.apple.finder NewWindowTarget -string '"PfLo"'
+run defaults write com.apple.finder NewWindowTargetPath -string "'file://${HOME}/'"
+
+step "Enabling icons for hard drives, servers, and removable media on the desktop..."
+run defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+run defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+run defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+run defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+
+step "Enabling show all filename extensions..."
+run defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+step "Enabling to keep folders on top when sorting by name..."
+run defaults write com.apple.finder _FXSortFoldersFirst -bool true
+
+step "Disabling the warning when changing a file extension?..."
+run defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+step "Enabling list view in all Finder windows by default..."
+run defaults write com.apple.finder FXPreferredViewStyle -string '"Nlsv"'
+
+step "Enabling AirDrop over Ethernet and on unsupported Macs running Lion..."
+run defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+
+step "Enabling show all files..."
+run defaults write com.apple.finder AppleShowAllFiles -bool true
+
+step "Changing dock configuration..."
+run defaults write com.apple.dock tilesize -int ${tilesize:-48}
+run defaults write com.apple.dock autohide -bool true
+run defaults write com.apple.dock showhidden -bool true
+# todo: colocar left
+
+step "Configuring app store to auto update daily in background..."
+run defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+run defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+run defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+run defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+run defaults write com.apple.commerce AutoUpdate -bool true
+
+chapter "Apps"
+
+step "Installing Homebrew...\n"
+which -s brew
+if [[ $? != 0 ]] ; then
+    run '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+else
+    run brew update
+fi
+
+step "Installing CLI apps...\n"
+
+for app in $(<$cwd/data/cli); do
+    if ! brew list -1 | grep -q "^${app}\$"; then
+        run brew install $app
+    fi
+done
+
+run 'pip install mallet-lldb'
+
+
+step "Installing Desktop apps...\n"
+
+for app in $(<$cwd/data/desktop); do
+    if ! brew cask list -1 | grep -q "^${app}\$"; then
+        run brew cask install $app
+    fi
+done
+
+step "Installing Fonts...\n"
+
+run brew tap caskroom/fonts
+
+for font in $(<$cwd/data/fonts); do
+    if ! brew cask list -1 | grep -q "^${font}\$"; then
+        run brew cask install $font
+    fi
+done
+
+step "Installing oh-my-zsh...\n"
+run 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
+run cp .zshrc ~/
+
+step "Configuring LLDB preferences...\n"
+run cp .lldbinit ~/
+
+step "Configuring iTerm2 preferences...\n"
+run cp -R .iTerm2 ~/.iTerm2
+run defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
+run defaults write com.googlecode.iterm2 PrefsCustomFolder ~/.iTerm2
+
+run killall Dock
+
+chapter ".. done .."
