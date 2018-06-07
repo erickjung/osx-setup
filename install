@@ -135,7 +135,6 @@ done
 
 run 'pip install mallet-lldb'
 
-
 step "Installing Desktop apps...\n"
 
 for app in $(<$cwd/data/desktop); do
@@ -145,18 +144,8 @@ for app in $(<$cwd/data/desktop); do
 done
 
 step "Installing Fonts...\n"
-
-run brew tap caskroom/fonts
-
-for font in $(<$cwd/data/fonts); do
-    if ! brew cask list -1 | grep -q "^${font}\$"; then
-        run brew cask install $font
-    fi
-done
-
-step "Installing oh-my-zsh...\n"
-run 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
-run ln -sfv $cwd/.zshrc ~
+run git clone https://github.com/powerline/fonts.git --depth=1 ~/.osx-setup/fonts && ~/.osx-setup/fonts/install.sh
+run rm -rf ~/.osx-setup/fonts
 
 step "Configuring LLDB preferences...\n"
 run ln -sfv $cwd/.lldbinit ~
@@ -165,6 +154,10 @@ step "Configuring iTerm2 preferences...\n"
 run ln -sfv $cwd/.iTerm2 ~
 run defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
 run defaults write com.googlecode.iterm2 PrefsCustomFolder ~/.iTerm2
+
+step "Installing oh-my-zsh... (type 'exit' after installing)\n"
+run 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
+run ln -sfv $cwd/.zshrc ~
 
 run killall Dock
 
