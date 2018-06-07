@@ -156,13 +156,13 @@ done
 
 step "Installing oh-my-zsh...\n"
 run 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'
-run cp .zshrc ~/
+run cp ./.zshrc ~/
 
 step "Configuring LLDB preferences...\n"
-run cp .lldbinit ~/
+run cp ./.lldbinit ~/
 
 step "Configuring iTerm2 preferences...\n"
-run cp -R .iTerm2 ~/.iTerm2
+run cp -R ./.iTerm2 ~/.iTerm2
 run defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -int 1
 run defaults write com.googlecode.iterm2 PrefsCustomFolder ~/.iTerm2
 
