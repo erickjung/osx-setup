@@ -68,7 +68,7 @@ step "Enabling full keyboard access for all controls..."
 run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 step "Setting a blazingly fast keyboard repeat rate..."
-run defaults write NSGlobalDomain KeyRepeat -int 1
+run defaults write NSGlobalDomain KeyRepeat -int 10
 run defaults write NSGlobalDomain InitialKeyRepeat -int 10
 
 step "Disabling auto-correct..."
