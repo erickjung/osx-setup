@@ -55,65 +55,65 @@ then
     echo ""
 fi
 
-chapter "Configuring OSX settings"
+# chapter "Configuring OSX settings"
 
 # step "Disabling OS X Gate Keeper..."
 # run sudo spctl --master-disable
 # run sudo defaults write /var/db/SystemPolicy-prefs.plist enabled -string no
 
-step "Disabling the “Are you sure you want to open this application?”..."
-run defaults write com.apple.LaunchServices LSQuarantine -bool false
+# step "Disabling the “Are you sure you want to open this application?”..."
+# run defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-step "Enabling full keyboard access for all controls..."
-run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+# step "Enabling full keyboard access for all controls..."
+# run defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-step "Setting a blazingly fast keyboard repeat rate..."
-run defaults write NSGlobalDomain KeyRepeat -int 10
-run defaults write NSGlobalDomain InitialKeyRepeat -int 10
+# step "Setting a blazingly fast keyboard repeat rate..."
+# run defaults write NSGlobalDomain KeyRepeat -int 10
+# run defaults write NSGlobalDomain InitialKeyRepeat -int 10
 
-step "Disabling auto-correct..."
-run defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+# step "Disabling auto-correct..."
+# run defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-step "Setting home as the default location for new Finder windows..."
-run defaults write com.apple.finder NewWindowTarget -string '"PfLo"'
-run defaults write com.apple.finder NewWindowTargetPath -string "'file://${HOME}/'"
+# step "Setting home as the default location for new Finder windows..."
+# run defaults write com.apple.finder NewWindowTarget -string '"PfLo"'
+# run defaults write com.apple.finder NewWindowTargetPath -string "'file://${HOME}/'"
 
-step "Enabling icons for hard drives, servers, and removable media on the desktop..."
-run defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-run defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-run defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
-run defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+# step "Enabling icons for hard drives, servers, and removable media on the desktop..."
+# run defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+# run defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+# run defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+# run defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
-step "Enabling show all filename extensions..."
-run defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# step "Enabling show all filename extensions..."
+# run defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
-step "Enabling to keep folders on top when sorting by name..."
-run defaults write com.apple.finder _FXSortFoldersFirst -bool true
+# step "Enabling to keep folders on top when sorting by name..."
+# run defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
-step "Disabling the warning when changing a file extension?..."
-run defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+# step "Disabling the warning when changing a file extension?..."
+# run defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
-step "Enabling list view in all Finder windows by default..."
-run defaults write com.apple.finder FXPreferredViewStyle -string '"Nlsv"'
+# step "Enabling list view in all Finder windows by default..."
+# run defaults write com.apple.finder FXPreferredViewStyle -string '"Nlsv"'
 
-step "Enabling AirDrop over Ethernet and on unsupported Macs running Lion..."
-run defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+# step "Enabling AirDrop over Ethernet and on unsupported Macs running Lion..."
+# run defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 
-step "Enabling show all files..."
-run defaults write com.apple.finder AppleShowAllFiles -bool true
+# step "Enabling show all files..."
+# run defaults write com.apple.finder AppleShowAllFiles -bool true
 
-step "Changing dock configuration..."
-run defaults write com.apple.dock tilesize -int ${tilesize:-48}
-run defaults write com.apple.dock autohide -bool true
-run defaults write com.apple.dock showhidden -bool true
+# step "Changing dock configuration..."
+# run defaults write com.apple.dock tilesize -int ${tilesize:-48}
+# run defaults write com.apple.dock autohide -bool true
+# run defaults write com.apple.dock showhidden -bool true
 # todo: colocar left
 
-step "Configuring app store to auto update daily in background..."
-run defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-run defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-run defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
-run defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
-run defaults write com.apple.commerce AutoUpdate -bool true
+# step "Configuring app store to auto update daily in background..."
+# run defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+# run defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+# run defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+# run defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+# run defaults write com.apple.commerce AutoUpdate -bool true
 
 chapter "Apps"
 
